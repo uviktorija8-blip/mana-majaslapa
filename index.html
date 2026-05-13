@@ -3,352 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mana Mājaslapa ar JS</title>
+    <title>Kopienas portāls | JavaScript projekts</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Galvene */
-        .site-header {
-            background: white;
-            padding: 1rem 0;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #2c3e50;
-            margin-left: 1.5rem;
-            font-weight: bold;
-        }
-
-        .nav-links a:hover {
-            color: #3498db;
-        }
-
-        /* Galvenais bloks */
-        .hero {
-            background: white;
-            border-radius: 10px;
-            margin: 2rem 0;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        .site-header { background: white; padding: 1rem 0; border-bottom: 3px solid #28a745; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo { font-size: 1.6rem; font-weight: bold; color: #28a745; }
+        .logo span { color: #333; }
+        .nav-links a { text-decoration: none; color: #555; margin-left: 1.5rem; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: #28a745; }
+        
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); color: white; border-radius: 15px; margin: 2rem 0; padding: 2.5rem; text-align: center; }
+        .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; opacity: 0.95; }
+        
         /* JS paneļi */
-        .js-panels {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .js-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .js-card h3 {
-            color: #2c3e50;
-            margin-bottom: 0.8rem;
-            border-bottom: 2px solid #3498db;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-
-        .js-card .output {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #3498db;
-            margin: 0.8rem 0;
-            padding: 0.5rem;
-            background: #f0f2f5;
-            border-radius: 8px;
-        }
-
-        .greeting-output {
-            font-size: 1.5rem !important;
-        }
-
-        .js-card input {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 150px;
-            margin: 5px;
-        }
-
-        .js-card button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-
-        .js-card button:hover {
-            background: #2980b9;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.7rem 1.5rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0 0.5rem;
-        }
-
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-
-        .btn-outline {
-            border: 2px solid #3498db;
-            color: #3498db;
-            background: white;
-        }
-
-        .btn-outline:hover {
-            background: #3498db;
-            color: white;
-        }
-
-        /* Ziņu kartītes */
-        .section-title {
-            font-size: 1.8rem;
-            margin: 2rem 0 1rem 0;
-            color: #2c3e50;
-            border-left: 5px solid #3498db;
-            padding-left: 1rem;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .news-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .news-card h3 {
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .news-card p {
-            color: #666;
-            margin: 0.8rem 0;
-        }
-
-        .read-more {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .read-more:hover {
-            text-decoration: underline;
-        }
-
-        /* Trīs elementi */
-        .three-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: space-between;
-            margin: 1.5rem 0;
-        }
-
-        .three-items div {
-            background: white;
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        /* Reklāmas bloks */
-        .ad-block {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 2rem 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .ad-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
-        .ad-block .btn-primary {
-            background: white;
-            color: #667eea;
-        }
-
-        .ad-block .btn-outline {
-            border-color: white;
-            color: white;
-            background: transparent;
-        }
-
-        /* Satura bloks */
-        .content-rich {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .rich-heading {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .custom-list {
-            margin: 1rem 0 1rem 1.5rem;
-        }
-
-        .custom-list li {
-            margin-bottom: 0.8rem;
-        }
-
-        .sub-text {
-            display: block;
-            font-size: 0.85rem;
-            color: #888;
-            margin-top: 0.2rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background: #f2f2f2;
-        }
-
-        /* Kājene */
-        .site-footer {
-            background: #2c3e50;
-            color: white;
-            margin-top: 3rem;
-            padding: 2rem 0;
-        }
-
-        .footer-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-
-        .footer-col h4 {
-            margin-bottom: 1rem;
-        }
-
-        .footer-col a {
-            color: #ccc;
-            text-decoration: none;
-            display: block;
-            margin: 0.5rem 0;
-        }
-
-        .footer-col a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #466;
-        }
-
+        .js-section { margin: 2rem 0; }
+        .js-title { font-size: 1.6rem; color: #28a745; margin-bottom: 1.5rem; border-left: 5px solid #28a745; padding-left: 1rem; }
+        .js-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .js-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08); transition: transform 0.2s; text-align: center; }
+        .js-card:hover { transform: translateY(-3px); }
+        .js-card h3 { color: #28a745; margin-bottom: 1rem; }
+        .output { font-size: 1.2rem; font-weight: bold; background: #e8f5e9; padding: 12px; border-radius: 8px; margin: 12px 0; color: #1e7e34; }
+        .greeting-output { font-size: 1.3rem; }
+        input, button { padding: 10px 15px; margin: 5px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #1e7e34; transform: scale(1.02); }
+        
+        /* Ziņas */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+        .news-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        .news-card h3 { color: #333; margin-bottom: 0.5rem; }
+        .news-card p { color: #666; margin: 0.8rem 0; }
+        .btn { display: inline-block; padding: 8px 20px; background: #28a745; color: white; border-radius: 20px; text-decoration: none; font-size: 0.9rem; border: none; cursor: pointer; }
+        .btn-outline { background: transparent; border: 2px solid #28a745; color: #28a745; }
+        .btn-outline:hover { background: #28a745; color: white; }
+        
+        /* Tabula */
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #28a745; color: white; }
+        
+        /* Footer */
+        .site-footer { background: #1a3c2c; color: white; margin-top: 3rem; padding: 2rem 0; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; }
+        .footer-col a { color: #ccc; text-decoration: none; display: block; margin: 0.5rem 0; }
+        
         @media (max-width: 768px) {
-            .header-flex {
-                flex-direction: column;
-            }
-            .nav-links a {
-                margin: 0 0.5rem;
-            }
-            .hero h1 {
-                font-size: 1.5rem;
-            }
+            .header-flex { flex-direction: column; text-align: center; }
+            .nav-links a { margin: 0 0.8rem; }
+            .hero h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -356,10 +65,10 @@
 
 <header class="site-header">
     <div class="container header-flex">
-        <div class="logo">🌟 Mana Mājaslapa</div>
+        <div class="logo">🌿 <span>Kopienas</span> Portāls</div>
         <div class="nav-links">
             <a href="#">Sākums</a>
-            <a href="#">Par mums</a>
+            <a href="#">Par projektu</a>
             <a href="#">Pakalpojumi</a>
             <a href="#">Kontakti</a>
         </div>
@@ -367,269 +76,150 @@
 </header>
 
 <main class="container">
-    <!-- Galvenais virsraksts -->
+    <!-- Hero bloks -->
     <div class="hero">
-        <h1>Laipni lūdzam mūsu mājaslapā!</h1>
-        <p>Šeit varat atrast interesantu informāciju par mūsu pakalpojumiem, jaunumiem un daudz ko citu. Mēs piedāvājam modernus risinājumus jūsu ikdienas vajadzībām.</p>
-        <div>
-            <a href="#" class="btn btn-primary">Uzzināt vairāk</a>
-            <a href="#" class="btn btn-outline">Sazināties</a>
-        </div>
+        <h1>🏡 Kopienas digitālais centrs</h1>
+        <p>Viena vieta visām ikdienas vajadzībām – datumi, rīki, informācija un palīdzība.</p>
     </div>
 
-    <!-- JAVASCRIPT ELEMENTI -->
-    <div class="js-panels">
-        <!-- 1. DATUMS (setDate) -->
-        <div class="js-card">
-            <h3>📅 Šodienas datums</h3>
-            <div class="output" id="dateOutput">...</div>
-            <p>setDate() - parāda pašreizējo datumu</p>
-        </div>
+    <!-- JavaScript funkcionalitāte -->
+    <div class="js-section">
+        <h2 class="js-title">⚡ Interaktīvie rīki</h2>
+        <div class="js-grid">
+            <!-- 1. Datums -->
+            <div class="js-card">
+                <h3>📅 Šodienas datums</h3>
+                <div class="output" id="dateOutput">...</div>
+                <p><small>setDate() - automātiska datuma atjaunošana</small></p>
+            </div>
 
-        <!-- 2. SVEICIENS PĒC STUNDAS -->
-        <div class="js-card">
-            <h3>👋 Sveiciens</h3>
-            <div class="output greeting-output" id="greetingOutput">...</div>
-            <p>Pamatojoties uz pulksteni: 
-               <span id="hourInfo"></span>
-            </p>
-        </div>
+            <!-- 2. Sveiciens -->
+            <div class="js-card">
+                <h3>👋 Personalizēts sveiciens</h3>
+                <div class="output greeting-output" id="greetingOutput">...</div>
+                <p><small>Pamatojoties uz pulksteni: <span id="hourInfo"></span></small></p>
+            </div>
 
-        <!-- 3. NOAPAĻOŠANA (Math.round) -->
-        <div class="js-card">
-            <h3>🔢 Noapaļo skaitli</h3>
-            <input type="number" id="roundInput" step="any" placeholder="Ievadi skaitli">
-            <button onclick="roundNumber()">Math.round()</button>
-            <div class="output" id="roundOutput">-</div>
-            <p>Noapaļo līdz tuvākajam veselam skaitlim</p>
-        </div>
+            <!-- 3. Noapaļošana -->
+            <div class="js-card">
+                <h3>🔢 Noapaļo skaitli</h3>
+                <input type="number" id="roundInput" step="any" placeholder="Ievadi skaitli">
+                <button onclick="roundNumber()">Math.round()</button>
+                <div class="output" id="roundOutput">-</div>
+            </div>
 
-        <!-- 4. PAPILDU: Vienkāršs kalkulators -->
-        <div class="js-card">
-            <h3>🧮 Vienkāršs kalkulators</h3>
-            <input type="number" id="num1" placeholder="Skaitlis 1">
-            <input type="number" id="num2" placeholder="Skaitlis 2">
-            <br>
-            <button onclick="calculate('+')">+</button>
-            <button onclick="calculate('-')">-</button>
-            <button onclick="calculate('*')">×</button>
-            <button onclick="calculate('/')">÷</button>
-            <div class="output" id="calcOutput">-</div>
+            <!-- 4. Kalkulators -->
+            <div class="js-card">
+                <h3>🧮 Ātrais kalkulators</h3>
+                <input type="number" id="num1" placeholder="Skaitlis 1" style="width:80px">
+                <input type="number" id="num2" placeholder="Skaitlis 2" style="width:80px"><br>
+                <button onclick="calc('+')">+</button>
+                <button onclick="calc('-')">-</button>
+                <button onclick="calc('*')">×</button>
+                <button onclick="calc('/')">÷</button>
+                <div class="output" id="calcOutput">-</div>
+            </div>
         </div>
     </div>
 
     <!-- Ziņu sadaļa -->
-    <div>
-        <h2 class="section-title">📰 Aktuālās ziņas</h2>
-        <div class="cards-grid">
-            <div class="news-card">
-                <h3>Jaunais projekts "Digitālā Latvija"</h3>
-                <p>Mūsu komanda ir uzsākusi darbu pie jauna projekta, kas veicinās digitālo pratību visā valstī. Projektā piedalīsies vairāk nekā 50 skolas.</p>
-                <a href="#" class="read-more" onclick="showAlert('Digitālā Latvija')">Lasīt vairāk →</a>
-            </div>
-            <div class="news-card">
-                <h3>Izaugsme un attīstība 2025</h3>
-                <p>Plānojam paplašināt savu darbību un piedāvāt jaunas iespējas gan privātpersonām, gan uzņēmumiem.</p>
-                <a href="#" class="read-more" onclick="showAlert('Izaugsme un attīstība 2025')">Lasīt vairāk →</a>
-            </div>
-            <div class="news-card">
-                <h3>Vides tehnoloģiju forums</h3>
-                <p>Piedalīsimies starptautiskā forumā par ilgtspējīgām tehnoloģijām un to nozīmi nākotnē.</p>
-                <a href="#" class="read-more" onclick="showAlert('Vides tehnoloģiju forums')">Lasīt vairāk →</a>
-            </div>
-        </div>
+    <h2 class="js-title" style="margin-top: 0.5rem;">📰 Aktuāli kopienā</h2>
+    <div class="news-grid">
+        <div class="news-card"><h3>🌱 Pavasara talkas</h3><p>Pievienojies apkārtnes sakopšanai 15. maijā!</p><button class="btn" onclick="showMessage('Pavasara talkas')">Lasīt vairāk</button></div>
+        <div class="news-card"><h3>💻 Digitālās darbnīcas</h3><p>Bezmaksas kursi senioriem katru ceturtdienu.</p><button class="btn" onclick="showMessage('Digitālās darbnīcas')">Lasīt vairāk</button></div>
+        <div class="news-card"><h3>🏆 Vietējais atbalsts</h3><p>Jaunā atbalsta programma mazajiem uzņēmējiem.</p><button class="btn" onclick="showMessage('Vietējais atbalsts')">Lasīt vairāk</button></div>
     </div>
 
-    <!-- Trīs elementi (kā paraugā Ziyas bide) -->
-    <div class="three-items">
-        <div>📌 Populārs raksts</div>
-        <div>⭐ Ieteicamais</div>
-        <div>🔥 Nedēļas tēma</div>
-    </div>
-
-    <!-- Reklāmas bloks -->
-    <div class="ad-block">
-        <div>
-            <div class="ad-title">Īpašais piedāvājums!</div>
-            <div>Izmēģini mūsu jauno pakalpojumu un saņem 20% atlaidi pirmajam mēnesim.</div>
-        </div>
-        <div>
-            <a href="#" class="btn btn-primary" onclick="showAlert('Iegādāties')">Iegādāties</a>
-            <a href="#" class="btn btn-outline" onclick="showAlert('Izmēģināt bez maksas')">Izmēģināt bez maksas</a>
-        </div>
-    </div>
-
-    <!-- Papildus saturs: saraksts un tabula -->
-    <div class="content-rich">
-        <h2 class="rich-heading">Mūsu piedāvājums</h2>
-        <p>Mēs nodrošinām plašu pakalpojumu klāstu, lai atbalstītu jūsu biznesa un privātās vajadzības. Šeit ir daži no mūsu galvenajiem virzieniem:</p>
-        
-        <ul class="custom-list">
-            <li>Mājaslapu izstrāde un uzturēšana<span class="sub-text">Modernas un ātras vietnes jebkuram uzņēmumam.</span></li>
-            <li>Digitālais mārketings un SEO<span class="sub-text">Piesaistiet vairāk klientu ar mūsu palīdzību.</span></li>
-            <li>Konsultācijas IT jautājumos<span class="sub-text">Pieredzējušu speciālistu atbalsts jūsu projektiem.</span></li>
-        </ul>
-
-        <h3>Plāni un cenas</h3>
+    <!-- Pakalpojumu tabula -->
+    <div class="js-card" style="margin: 2rem 0;">
+        <h3>📊 Mūsu pakalpojumu cenas</h3>
         <table>
-            <thead>
-                <tr><th>Plāns</th><th>Cena (mēnesī)</th><th>Ietvertie pakalpojumi</th></tr>
-            </thead>
+            <thead><tr><th>Pakalpojums</th><th>Cena</th><th>Apraksts</th></tr></thead>
             <tbody>
-                <tr> proiektuakPamata</td><td>€49</td><td>Mājaslapa, 5 lapas, e-pasta atbalsts</td></tr>
-                <tr> proiektuakBizness</td><td>€99</td><td>Mājaslapa, 15 lapas, SEO optimizācija, prioritārais atbalsts</td></tr>
-                <tr> proiektuakPremium</td><td>€199</td><td>Visas iespējas + pielāgots dizains, e-veikals, 24/7 atbalsts</td></tr>
+                <tr><td>Mājaslapas izstrāde</td><td>€199</td><td>Modernas, responsīvas vietnes</td></tr>
+                <tr><td>Digitālais mārketings</td><td>€99/mēn</td><td>SEO, sociālie tīkli</td></tr>
+                <tr><td>IT konsultācijas</td><td>€49/h</td><td>Pieredzējušu speciālistu atbalsts</td></tr>
             </tbody>
         </table>
-        <p>* Visi plāni ietver servera hosting un domēna vārda reģistrāciju pirmajam gadam.</p>
-        
-        <!-- Interaktīva poga cenām -->
-        <button class="btn btn-primary" onclick="showPrices()">📊 Parādīt cenu kopsavilkumu</button>
-        <div id="priceSummary" style="margin-top: 10px; padding: 10px; background: #f0f2f5; border-radius: 8px; display: none;"></div>
+        <button class="btn" onclick="showTotal()">💰 Aprēķināt vidējo cenu</button>
+        <div id="totalOutput" class="output" style="margin-top: 10px; display: none;"></div>
     </div>
 </main>
 
-<!-- Kājene -->
 <footer class="site-footer">
     <div class="container">
         <div class="footer-grid">
-            <div class="footer-col">
-                <h4>🌟 Mana Mājaslapa</h4>
-                <p>Mūsu mērķis ir piedāvāt kvalitatīvus digitālos risinājumus ikvienam.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Kontakti:</h4>
-                <p>E-pasts: <a href="mailto:info@manamajaslapa.lv">info@manamajaslapa.lv</a></p>
-                <p>Tel: +371 26543210</p>
-                <p>Adrese: Brīvības iela 12, Rīga, LV-1010</p>
-            </div>
-            <div class="footer-col">
-                <h4>Izvēlne:</h4>
-                <a href="#">Sākums</a>
-                <a href="#">Par mums</a>
-                <a href="#">Pakalpojumi</a>
-                <a href="#">Kontakti</a>
-                <a href="#">Blogs</a>
-            </div>
+            <div class="footer-col"><h4>🌿 Kopienas Portāls</h4><p>Risinājums vietējai kopienai – vienkārši, ātri, efektīvi.</p></div>
+            <div class="footer-col"><h4>Kontakti</h4><p>📧 info@kopienas-portals.lv</p><p>📞 +371 29123456</p></div>
+            <div class="footer-col"><h4>Izvēlne</h4><a href="#">Sākums</a><a href="#">Par mums</a><a href="#">Kontakti</a></div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2025 Mana Mājaslapa. Visas tiesības aizsargātas.</p>
-        </div>
+        <div class="footer-bottom" style="text-align:center; margin-top:1.5rem; padding-top:1rem; border-top:1px solid #2a5a3a;"><p>© 2025 Kopienas Portāls | Izstrādāts lokālās problēmas risināšanai</p></div>
     </div>
 </footer>
 
 <script>
-    // ========== 1. setDate() - parāda šodienas datumu ==========
+    // === 1. DATUMS ===
     function showDate() {
         const today = new Date();
         const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-        const formattedDate = today.toLocaleDateString('lv-LV', options);
-        document.getElementById('dateOutput').innerHTML = formattedDate;
+        document.getElementById('dateOutput').innerHTML = today.toLocaleDateString('lv-LV', options);
     }
     showDate();
 
-    // ========== 2. Sveiciens pēc stundas (stunda < 18 utt.) ==========
+    // === 2. SVEICIENS PĒC STUNDAS ===
     function showGreeting() {
-        const now = new Date();
-        const stunda = now.getHours();
+        const stunda = new Date().getHours();
         let greeting = "";
-        
-        if (stunda < 10) {
-            greeting = "🌅 Labrīt! Jauka diena priekšā!";
-        } else if (stunda < 18) {
-            greeting = "☀️ Labdien! Priecājamies Tevi redzēt!";
-        } else {
-            greeting = "🌙 Labvakar! Atpūties pēc darba dienas.";
-        }
-        
+        if (stunda < 10) greeting = "🌅 Labrīt! Skaistu dienu!";
+        else if (stunda < 18) greeting = "☀️ Labdien! Priecājamies Tevi redzēt!";
+        else greeting = "🌙 Labvakar! Novēlam mierīgu vakaru!";
         document.getElementById('greetingOutput').innerHTML = greeting;
         document.getElementById('hourInfo').innerHTML = stunda + ":00";
     }
     showGreeting();
 
-    // ========== 3. Math.round() - noapaļošana ==========
+    // === 3. NOAPAĻOŠANA ===
     function roundNumber() {
-        let input = document.getElementById('roundInput').value;
-        if (input === "") {
-            document.getElementById('roundOutput').innerHTML = "❌ Ievadi skaitli!";
-            return;
-        }
-        let number = parseFloat(input);
-        if (isNaN(number)) {
-            document.getElementById('roundOutput').innerHTML = "❌ Lūdzu, ievadi derīgu skaitli!";
-        } else {
-            let rounded = Math.round(number);
-            document.getElementById('roundOutput').innerHTML = `${number} → noapaļots: ${rounded}`;
-        }
+        let val = parseFloat(document.getElementById('roundInput').value);
+        if (isNaN(val)) document.getElementById('roundOutput').innerHTML = "❌ Ievadi skaitli!";
+        else document.getElementById('roundOutput').innerHTML = `${val} → ${Math.round(val)}`;
     }
 
-    // ========== 4. Vienkāršs kalkulators ==========
-    function calculate(operation) {
-        let num1 = parseFloat(document.getElementById('num1').value);
-        let num2 = parseFloat(document.getElementById('num2').value);
-        let result;
-        
-        if (isNaN(num1) || isNaN(num2)) {
-            document.getElementById('calcOutput').innerHTML = "❌ Ievadi abus skaitļus!";
-            return;
-        }
-        
-        switch(operation) {
-            case '+':
-                result = num1 + num2;
-                break;
-            case '-':
-                result = num1 - num2;
-                break;
-            case '*':
-                result = num1 * num2;
-                break;
-            case '/':
-                if (num2 === 0) {
-                    document.getElementById('calcOutput').innerHTML = "❌ Dalīšana ar nulli nav iespējama!";
-                    return;
-                }
-                result = num1 / num2;
-                break;
-            default:
-                return;
-        }
-        
-        document.getElementById('calcOutput').innerHTML = `${num1} ${operation} ${num2} = ${result}`;
+    // === 4. KALKULATORS ===
+    function calc(op) {
+        let a = parseFloat(document.getElementById('num1').value);
+        let b = parseFloat(document.getElementById('num2').value);
+        if (isNaN(a) || isNaN(b)) { document.getElementById('calcOutput').innerHTML = "❌ Ievadi abus skaitļus!"; return; }
+        let res;
+        if (op === '+') res = a + b;
+        else if (op === '-') res = a - b;
+        else if (op === '*') res = a * b;
+        else if (op === '/') { if (b === 0) { document.getElementById('calcOutput').innerHTML = "❌ Dalīt ar nulli nedrīkst!"; return; } res = a / b; }
+        document.getElementById('calcOutput').innerHTML = `${a} ${op} ${b} = ${res}`;
     }
 
-    // ========== 5. Papildus: alert() poga ==========
-    function showAlert(message) {
-        alert("📢 Jūs nospiedāt: " + message);
+    // === 5. ALERT FUNKCIJA ===
+    function showMessage(topic) {
+        alert(`📢 Informācija par: ${topic}\n\nVairāk informācijas drīzumā!`);
     }
 
-    // ========== 6. Cenu kopsavilkums ==========
-    function showPrices() {
-        const prices = [
-            { name: "Pamata", price: 49 },
-            { name: "Bizness", price: 99 },
-            { name: "Premium", price: 199 }
-        ];
-        
-        let summary = "<strong>📋 Cenu kopsavilkums:</strong><br>";
-        let total = 0;
-        
-        for (let i = 0; i < prices.length; i++) {
-            summary += `• ${prices[i].name} plāns: €${prices[i].price} mēnesī<br>`;
-            total += prices[i].price;
-        }
-        summary += `<br><strong>Vidējā cena: €${Math.round(total / prices.length)}</strong>`;
-        
-        const summaryDiv = document.getElementById('priceSummary');
-        summaryDiv.innerHTML = summary;
-        summaryDiv.style.display = "block";
+    // === 6. CENU APRĒĶINS ===
+    function showTotal() {
+        const prices = [199, 99, 49];
+        let sum = 0;
+        for (let i = 0; i < prices.length; i++) { sum += prices[i]; }
+        let avg = Math.round(sum / prices.length);
+        const div = document.getElementById('totalOutput');
+        div.innerHTML = `💰 Vidējā pakalpojuma cena: €${avg} (visi pakalpojumi kopā: €${sum})`;
+        div.style.display = "block";
     }
 
-    // ========== 7. Papildus: konsolē parāda fruits masīvu ==========
-    var fruits = ["Banana", "Orange", "Apple", "Mango"];
-    console.log("Augļu masīvs (fruits):", fruits);
-    console.log("Pirmais auglis:", fruits[0]);
+    // Konsoles izvade (izpētes dati)
+    console.log("=== PROJEKTS: Kopienas Portāls ===");
+    console.log("Problēma: informācijas trūkums kopienā");
+    console.log("Risinājums: interaktīva mājaslapa ar JS rīkiem");
+    var fruits = ["Ābols", "Bumbieris", "Apelsīns", "Banāns"];
+    console.log("Augļu piemērs masīvam:", fruits);
 </script>
-
 </body>
 </html>
