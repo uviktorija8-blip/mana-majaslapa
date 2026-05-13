@@ -1,14 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="lv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Mājaslapa | Mūsdienīgs dizaina paraugs</title>
-    <!-- Google Fonts: modernai un tīrai tipogrāfikai -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (free ikonām) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mana Mājaslapa</title>
     <style>
         * {
             margin: 0;
@@ -17,29 +12,23 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f5f7fb;
-            color: #1e293b;
-            line-height: 1.5;
-            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 20px;
         }
 
-        /* header / navigācija */
+        /* Galvene */
         .site-header {
             background: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.05);
             padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(0px);
-            border-bottom: 1px solid #eef2f6;
+            border-bottom: 2px solid #ddd;
         }
 
         .header-flex {
@@ -50,306 +39,213 @@
             gap: 1rem;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.6rem;
-            box-shadow: 0 6px 12px -6px rgba(37, 99, 235, 0.3);
-        }
-
-        .logo-text {
-            font-weight: 800;
-            font-size: 1.7rem;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #1e293b, #2d3a4b);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            flex-wrap: wrap;
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
         }
 
         .nav-links a {
             text-decoration: none;
-            font-weight: 600;
-            color: #334155;
-            transition: 0.2s;
-            font-size: 1rem;
+            color: #2c3e50;
+            margin-left: 1.5rem;
+            font-weight: bold;
         }
 
         .nav-links a:hover {
-            color: #2563eb;
+            color: #3498db;
         }
 
-        /* hero / galvenais virsraksts */
+        /* Galvenais bloks */
         .hero {
             background: white;
-            border-radius: 2rem;
-            margin: 2rem 0 1.8rem 0;
-            padding: 2.8rem 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.08);
-            border: 1px solid #edf2f7;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(125deg, #0f172a, #2563eb);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
+            font-size: 2.2rem;
+            color: #2c3e50;
             margin-bottom: 1rem;
-            letter-spacing: -0.02em;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: #475569;
-            max-width: 720px;
-            margin: 0 auto 1.8rem auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
         }
 
         .btn {
             display: inline-block;
-            padding: 0.8rem 1.8rem;
-            border-radius: 60px;
-            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
             text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
-            font-size: 0.95rem;
+            font-weight: bold;
+            margin: 0 0.5rem;
         }
 
         .btn-primary {
-            background: #2563eb;
+            background: #3498db;
             color: white;
-            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
         }
 
         .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
+            background: #2980b9;
         }
 
         .btn-outline {
-            background: transparent;
-            border: 1.5px solid #cbd5e1;
-            color: #1e293b;
+            border: 2px solid #3498db;
+            color: #3498db;
         }
 
         .btn-outline:hover {
-            border-color: #2563eb;
-            background: #f8fafc;
+            background: #3498db;
+            color: white;
         }
 
-        /* kartiņu sadaļa (ziņas virsraksti + lasīt vairāk) */
-        .news-section {
-            margin: 3rem 0;
-        }
-
+        /* Ziņu kartītes */
         .section-title {
             font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1.8rem;
-            border-left: 6px solid #2563eb;
+            margin: 2rem 0 1rem 0;
+            color: #2c3e50;
+            border-left: 5px solid #3498db;
             padding-left: 1rem;
         }
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
         }
 
         .news-card {
             background: white;
-            border-radius: 1.5rem;
+            border-radius: 10px;
             padding: 1.5rem;
-            transition: all 0.25s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-            border: 1px solid #eef2ff;
-        }
-
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
-            border-color: #cbdffc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .news-card h3 {
-            font-size: 1.35rem;
-            font-weight: 700;
+            color: #2c3e50;
             margin-bottom: 0.5rem;
-            color: #0f172a;
         }
 
         .news-card p {
-            color: #475569;
-            margin: 1rem 0 1.2rem 0;
-            line-height: 1.45;
+            color: #666;
+            margin: 0.8rem 0;
         }
 
         .read-more {
-            font-weight: 700;
-            color: #2563eb;
+            color: #3498db;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            font-weight: bold;
         }
 
-        .read-more i {
-            transition: transform 0.2s;
+        .read-more:hover {
+            text-decoration: underline;
         }
 
-        .read-more:hover i {
-            transform: translateX(4px);
-        }
-
-        .inline-badge-list {
+        /* Trīs elementi */
+        .three-items {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 1rem;
+            justify-content: space-between;
+            margin: 1.5rem 0;
         }
 
-        .badge {
-            background: #eef2ff;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #1e40af;
+        .three-items div {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* reklāmas bloks */
+        /* Reklāmas bloks */
         .ad-block {
-            background: linear-gradient(115deg, #f1f5f9 0%, #ffffff 100%);
-            border-radius: 2rem;
-            margin: 3rem 0;
-            padding: 2rem 2rem;
-            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 1.5rem;
-        }
-
-        .ad-title {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #0f172a;
-        }
-
-        .ad-actions {
-            display: flex;
             gap: 1rem;
         }
 
-        /* heading + lorem + saraksts + tabula */
+        .ad-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .ad-block .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .ad-block .btn-outline {
+            border-color: white;
+            color: white;
+        }
+
+        /* Satura bloks */
         .content-rich {
             background: white;
-            border-radius: 1.8rem;
-            padding: 2rem;
+            border-radius: 10px;
+            padding: 1.5rem;
             margin: 2rem 0;
-            border: 1px solid #edf2f7;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .rich-heading {
-            font-size: 1.8rem;
-            font-weight: 700;
+            color: #2c3e50;
             margin-bottom: 1rem;
-            color: #0c4a6e;
         }
 
         .custom-list {
-            margin: 1.5rem 0;
-            list-style: none;
+            margin: 1rem 0 1rem 1.5rem;
         }
 
         .custom-list li {
-            margin-bottom: 1rem;
-            padding-left: 1.5rem;
-            position: relative;
+            margin-bottom: 0.8rem;
         }
 
-        .custom-list li::before {
-            content: "•";
-            color: #2563eb;
-            font-weight: bold;
-            font-size: 1.2rem;
-            position: absolute;
-            left: 0;
-        }
-
-        .custom-list .sub-text {
+        .sub-text {
             display: block;
             font-size: 0.85rem;
-            color: #5b6e8c;
+            color: #888;
             margin-top: 0.2rem;
         }
 
-        .styled-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1.8rem 0;
-            font-size: 0.95rem;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin: 1rem 0;
         }
 
-        .styled-table th {
-            background-color: #f1f5f9;
-            padding: 12px 16px;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
-            font-weight: 700;
-            color: #1e293b;
-            border-bottom: 2px solid #cbd5e1;
         }
 
-        .styled-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #e2e8f0;
-            background-color: white;
+        th {
+            background: #f2f2f2;
         }
 
-        /* footer */
+        /* Kājene */
         .site-footer {
-            background: #0f172a;
-            color: #cbd5e1;
-            border-radius: 2rem 2rem 0 0;
-            margin-top: 4rem;
-            padding: 2.5rem 0 2rem;
+            background: #2c3e50;
+            color: white;
+            margin-top: 3rem;
+            padding: 2rem 0;
         }
 
         .footer-grid {
@@ -360,17 +256,14 @@
         }
 
         .footer-col h4 {
-            color: white;
-            font-weight: 700;
             margin-bottom: 1rem;
-            font-size: 1.1rem;
         }
 
-        .footer-col p, .footer-col a {
-            color: #94a3b8;
+        .footer-col a {
+            color: #ccc;
             text-decoration: none;
-            transition: 0.2s;
-            line-height: 1.6;
+            display: block;
+            margin: 0.5rem 0;
         }
 
         .footer-col a:hover {
@@ -378,25 +271,20 @@
         }
 
         .footer-bottom {
-            border-top: 1px solid #1e293b;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
             text-align: center;
-            font-size: 0.85rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #466;
         }
 
-        @media (max-width: 780px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
+        @media (max-width: 768px) {
             .header-flex {
                 flex-direction: column;
-                align-items: center;
             }
-            .container {
-                padding: 0 20px;
+            .nav-links a {
+                margin: 0 0.5rem;
             }
-            .ad-title {
+            .hero h1 {
                 font-size: 1.5rem;
             }
         }
@@ -406,134 +294,122 @@
 
 <header class="site-header">
     <div class="container header-flex">
-        <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fas fa-code"></i>
-            </div>
-            <div class="logo-text">Nākotnes Medijs</div>
-        </div>
+        <div class="logo">🌟 Mana Mājaslapa</div>
         <div class="nav-links">
             <a href="#">Sākums</a>
             <a href="#">Par mums</a>
+            <a href="#">Pakalpojumi</a>
             <a href="#">Kontakti</a>
-            <a href="#">Reklāma</a>
         </div>
     </div>
 </header>
 
 <main class="container">
-    <!-- Galvenais virsraksts (hero) -->
+    <!-- Galvenais virsraksts -->
     <div class="hero">
-        <h1>Digitālā nākotne. Jaunas iespējas.</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam risus neque, consectetur vitae semper et, sodales eget arcu. Aliquam dapibus nunc eget feugiat tincidunt.</p>
-        <div class="hero-buttons">
-            <a href="#" class="btn btn-primary">Lasīt vairāk <i class="fas fa-arrow-right"></i></a>
-            <a href="#" class="btn btn-outline">Pārēdien <i class="fas fa-newspaper"></i></a>
+        <h1>Laipni lūdzam mūsu mājaslapā!</h1>
+        <p>Šeit varat atrast interesantu informāciju par mūsu pakalpojumiem, jaunumiem un daudz ko citu. Mēs piedāvājam modernus risinājumus jūsu ikdienas vajadzībām.</p>
+        <div>
+            <a href="#" class="btn btn-primary">Uzzināt vairāk</a>
+            <a href="#" class="btn btn-outline">Sazināties</a>
         </div>
     </div>
 
-    <!-- Ziņu sadaļa: kaut kāds ziņas virsraksts + lasīt vairāk -->
-    <div class="news-section">
-        <h2 class="section-title">🏷️ Aktuālās tēmas</h2>
+    <!-- Ziņu sadaļa -->
+    <div>
+        <h2 class="section-title">📰 Aktuālās ziņas</h2>
         <div class="cards-grid">
-            <!-- 1. karte - garš virsraksts, kā aprakstā -->
             <div class="news-card">
-                <h3>Inovāciju forums 2025: mākslīgais intelekts un ilgtspēja</h3>
-                <p>Kaut kāds ziņas virsraksts, kurš var būt garš, vai īss – šeit ir lieliska iespēja ielūkoties tehnoloģiju nākotnē un to ietekmē uz sabiedrību.</p>
-                <a href="#" class="read-more">Lasīt vairāk <i class="fas fa-chevron-right"></i></a>
+                <h3>Jaunais projekts "Digitālā Latvija"</h3>
+                <p>Mūsu komanda ir uzsākusi darbu pie jauna projekta, kas veicinās digitālo pratību visā valstī. Projektā piedalīsies vairāk nekā 50 skolas.</p>
+                <a href="#" class="read-more">Lasīt vairāk →</a>
             </div>
-            <!-- 2. karte: Kaut kāds ziņas virsraksts (īss)-->
             <div class="news-card">
-                <h3>Klimatneitralitātes ceļvedis</h3>
-                <p>Eiropas zaļais kurss un jaunās tehnoloģijas. Uzzini vairāk par ilgtspējīgiem risinājumiem.</p>
-                <a href="#" class="read-more">Lasīt vairāk <i class="fas fa-chevron-right"></i></a>
+                <h3>Izaugsme un attīstība 2025</h3>
+                <p>Plānojam paplašināt savu darbību un piedāvāt jaunas iespējas gan privātpersonām, gan uzņēmumiem.</p>
+                <a href="#" class="read-more">Lasīt vairāk →</a>
             </div>
-            <!-- 3. karte: Kaut kāda - ar papildus kontekstu -->
             <div class="news-card">
-                <h3>Kaut kāda revolūcija start-up ekosistēmā</h3>
-                <p>Investīciju rekordi un jaunuzņēmumu izaicinājumi. Latvijas tehnoloģiju nozare aug straujāk nekā jebkad.</p>
-                <a href="#" class="read-more">Lasīt vairāk <i class="fas fa-chevron-right"></i></a>
-                <div class="inline-badge-list"><span class="badge">Startupi</span><span class="badge">Izaugsme</span></div>
+                <h3>Vides tehnoloģiju forums</h3>
+                <p>Piedalīsimies starptautiskā forumā par ilgtspējīgām tehnoloģijām un to nozīmi nākotnē.</p>
+                <a href="#" class="read-more">Lasīt vairāk →</a>
             </div>
-        </div>
-
-        <!-- Papildu rinda: Ziyas bide trīs reizes (kā uzdevuma fragmentā). Elegantā veidā kā mini statuss -->
-        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; margin-top: 2rem; background: #f8fafd; border-radius: 1.5rem; padding: 1rem 1.5rem;">
-            <div style="font-weight: 700; background: white; border-radius: 40px; padding: 0.5rem 1.2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);"><i class="fas fa-video"></i> Ziyas bide</div>
-            <div style="font-weight: 700; background: white; border-radius: 40px; padding: 0.5rem 1.2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);"><i class="fas fa-microphone-alt"></i> Ziyas bide</div>
-            <div style="font-weight: 700; background: white; border-radius: 40px; padding: 0.5rem 1.2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);"><i class="fas fa-chart-line"></i> Ziyas bide</div>
         </div>
     </div>
 
-    <!-- Reklāmas virsraksts -->
+    <!-- Trīs elementi (kā paraugā Ziyas bide) -->
+    <div class="three-items">
+        <div>📌 Populārs raksts</div>
+        <div>⭐ Ieteicamais</div>
+        <div>🔥 Nedēļas tēma</div>
+    </div>
+
+    <!-- Reklāmas bloks -->
     <div class="ad-block">
         <div>
-            <div class="ad-title">🚀 Reklāmas virsraksts</div>
-            <div style="color:#334155; margin-top: 8px;">Īpašs piedāvājums — atklāj jaunas iespējas!</div>
+            <div class="ad-title">Īpašais piedāvājums!</div>
+            <div>Izmēģini mūsu jauno pakalpojumu un saņem 20% atlaidi pirmajam mēnesim.</div>
         </div>
-        <div class="ad-actions">
-            <a href="#" class="btn btn-primary"><i class="fas fa-cart-shopping"></i> Pirkts</a>
-            <a href="#" class="btn btn-outline"><i class="fas fa-flask"></i> Izmēģināt</a>
+        <div>
+            <a href="#" class="btn btn-primary">Iegādāties</a>
+            <a href="#" class="btn btn-outline">Izmēģināt bez maksas</a>
         </div>
     </div>
 
-    <!-- Heading + Lorem + saraksts + tabula -->
+    <!-- Papildus saturs: saraksts un tabula -->
     <div class="content-rich">
-        <h2 class="rich-heading">Mūsdienu digitālā transformācija</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <h2 class="rich-heading">Mūsu piedāvājums</h2>
+        <p>Mēs nodrošinām plašu pakalpojumu klāstu, lai atbalstītu jūsu biznesa un privātās vajadzības. Šeit ir daži no mūsu galvenajiem virzieniem:</p>
         
         <ul class="custom-list">
-            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <span class="sub-text">Aliquam risus neque, consectetur vitae semper et, sodales eget arcu.</span></li>
-            <li>Izaugsmes stratēģijas un inovāciju menedžments. <span class="sub-text">Loro ipsum dolor sit amet, consectetur adipiscing elit.</span></li>
+            <li>Mājaslapu izstrāde un uzturēšana<span class="sub-text">Modernas un ātras vietnes jebkuram uzņēmumam.</span></li>
+            <li>Digitālais mārketings un SEO<span class="sub-text">Piesaistiet vairāk klientu ar mūsu palīdzību.</span></li>
+            <li>Konsultācijas IT jautājumos<span class="sub-text">Pieredzējušu speciālistu atbalsts jūsu projektiem.</span></li>
         </ul>
 
-        <!-- Tabula kā paraugā -->
-        <table class="styled-table">
+        <h3>Plāni un cenas</h3>
+        <table>
             <thead>
-                </tr><th>Value 1</th><th>Value 2</th><th>Value 3</th></tr>
+                <tr><th>Plāns</th><th>Cena (mēnesī)</th><th>Ietvertie pakalpojumi</th></tr>
             </thead>
             <tbody>
-                <tr><td>Value 4</td><td>Value 5</td><td>Value 6</td></tr>
-                <tr><td>Value 7</td><td>Value 8</td><td>Value 9</td></tr>
-                <tr><td>Efektivitāte</td><td>91%</td><td>Augsta precizitāte</td></tr>
+                <tr><td>Pamata</td><td>€49</td><td>Mājaslapa, 5 lapas, e-pasta atbalsts</td></tr>
+                <tr><td>Bizness</td><td>€99</td><td>Mājaslapa, 15 lapas, SEO optimizācija, prioritārais atbalsts</td></tr>
+                <tr><td>Premium</td><td>€199</td><td>Visas iespējas + pielāgots dizains, e-veikals, 24/7 atbalsts</td></tr>
             </tbody>
         </table>
-        <p><i class="fas fa-chart-simple"></i> Datu analīze rāda, ka jaunās tehnoloģijas uzlabo produktivitāti par 35%.</p>
+        <p>* Visi plāni ietver servera hosting un domēna vārda reģistrāciju pirmajam gadam.</p>
     </div>
 </main>
 
-<!-- FOOTER: Logo, kontakti, izvēle -->
+<!-- Kājene -->
 <footer class="site-footer">
     <div class="container">
         <div class="footer-grid">
             <div class="footer-col">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
-                    <div class="logo-icon" style="background: #3b82f6; width: 38px; height: 38px; font-size: 1.2rem;"><i class="fas fa-meteor"></i></div>
-                    <span style="font-weight: 800; color: white; font-size: 1.4rem;">Logo</span>
-                </div>
-                <p>Mēs veidojam nākotnes tehnoloģiju risinājumus, kas iedvesmo un padara dzīvi vieglāku.</p>
+                <h4>🌟 Mana Mājaslapa</h4>
+                <p>Mūsu mērķis ir piedāvāt kvalitatīvus digitālos risinājumus ikvienam.</p>
             </div>
             <div class="footer-col">
                 <h4>Kontakti:</h4>
-                <p><i class="fas fa-envelope"></i> E-pasts: <a href="mailto:info@nakotnesmedijs.lv">info@nakotnesmedijs.lv</a></p>
-                <p><i class="fas fa-phone-alt"></i> Tel: +371 27001234</p>
-                <p><i class="fab fa-linkedin"></i> /nakotnesmedijs</p>
+                <p>E-pasts: <a href="mailto:info@manamajaslapa.lv">info@manamajaslapa.lv</a></p>
+                <p>Tel: +371 26543210</p>
+                <p>Adrese: Brīvības iela 12, Rīga, LV-1010</p>
             </div>
             <div class="footer-col">
-                <h4>Izvēle:</h4>
-                <p><a href="#">🏠 Sākums</a></p>
-                <p><a href="#">📖 Par mums</a></p>
-                <p><a href="#">📞 Kontakti</a></p>
-                <p><a href="#">📢 Presei</a></p>
+                <h4>Izvēlne:</h4>
+                <a href="#">Sākums</a>
+                <a href="#">Par mums</a>
+                <a href="#">Pakalpojumi</a>
+                <a href="#">Kontakti</a>
+                <a href="#">Blogs</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2025 Nākotnes Medijs — visas tiesības aizsargātas. Izstrādāts pēc parauga ar pašu izvēlētu saturu.</span>
+            <p>© 2025 Mana Mājaslapa. Visas tiesības aizsargātas.</p>
         </div>
     </div>
 </footer>
 
-<!-- neliela interaktivitāte priekš dizaina akcenta (tīri vizuāla) -->
 </body>
 </html>
-```
