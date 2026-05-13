@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mana Mājaslapa</title>
+    <title>Mana Mājaslapa ar JS</title>
     <style>
         * {
             margin: 0;
@@ -78,6 +78,66 @@
             margin-bottom: 1.5rem;
         }
 
+        /* JS paneļi */
+        .js-panels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .js-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .js-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid #3498db;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .js-card .output {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            background: #f0f2f5;
+            border-radius: 8px;
+        }
+
+        .greeting-output {
+            font-size: 1.5rem !important;
+        }
+
+        .js-card input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 150px;
+            margin: 5px;
+        }
+
+        .js-card button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .js-card button:hover {
+            background: #2980b9;
+        }
+
         .btn {
             display: inline-block;
             padding: 0.7rem 1.5rem;
@@ -99,6 +159,7 @@
         .btn-outline {
             border: 2px solid #3498db;
             color: #3498db;
+            background: white;
         }
 
         .btn-outline:hover {
@@ -193,6 +254,7 @@
         .ad-block .btn-outline {
             border-color: white;
             color: white;
+            background: transparent;
         }
 
         /* Satura bloks */
@@ -315,6 +377,47 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT ELEMENTI -->
+    <div class="js-panels">
+        <!-- 1. DATUMS (setDate) -->
+        <div class="js-card">
+            <h3>📅 Šodienas datums</h3>
+            <div class="output" id="dateOutput">...</div>
+            <p>setDate() - parāda pašreizējo datumu</p>
+        </div>
+
+        <!-- 2. SVEICIENS PĒC STUNDAS -->
+        <div class="js-card">
+            <h3>👋 Sveiciens</h3>
+            <div class="output greeting-output" id="greetingOutput">...</div>
+            <p>Pamatojoties uz pulksteni: 
+               <span id="hourInfo"></span>
+            </p>
+        </div>
+
+        <!-- 3. NOAPAĻOŠANA (Math.round) -->
+        <div class="js-card">
+            <h3>🔢 Noapaļo skaitli</h3>
+            <input type="number" id="roundInput" step="any" placeholder="Ievadi skaitli">
+            <button onclick="roundNumber()">Math.round()</button>
+            <div class="output" id="roundOutput">-</div>
+            <p>Noapaļo līdz tuvākajam veselam skaitlim</p>
+        </div>
+
+        <!-- 4. PAPILDU: Vienkāršs kalkulators -->
+        <div class="js-card">
+            <h3>🧮 Vienkāršs kalkulators</h3>
+            <input type="number" id="num1" placeholder="Skaitlis 1">
+            <input type="number" id="num2" placeholder="Skaitlis 2">
+            <br>
+            <button onclick="calculate('+')">+</button>
+            <button onclick="calculate('-')">-</button>
+            <button onclick="calculate('*')">×</button>
+            <button onclick="calculate('/')">÷</button>
+            <div class="output" id="calcOutput">-</div>
+        </div>
+    </div>
+
     <!-- Ziņu sadaļa -->
     <div>
         <h2 class="section-title">📰 Aktuālās ziņas</h2>
@@ -322,17 +425,17 @@
             <div class="news-card">
                 <h3>Jaunais projekts "Digitālā Latvija"</h3>
                 <p>Mūsu komanda ir uzsākusi darbu pie jauna projekta, kas veicinās digitālo pratību visā valstī. Projektā piedalīsies vairāk nekā 50 skolas.</p>
-                <a href="#" class="read-more">Lasīt vairāk →</a>
+                <a href="#" class="read-more" onclick="showAlert('Digitālā Latvija')">Lasīt vairāk →</a>
             </div>
             <div class="news-card">
                 <h3>Izaugsme un attīstība 2025</h3>
                 <p>Plānojam paplašināt savu darbību un piedāvāt jaunas iespējas gan privātpersonām, gan uzņēmumiem.</p>
-                <a href="#" class="read-more">Lasīt vairāk →</a>
+                <a href="#" class="read-more" onclick="showAlert('Izaugsme un attīstība 2025')">Lasīt vairāk →</a>
             </div>
             <div class="news-card">
                 <h3>Vides tehnoloģiju forums</h3>
                 <p>Piedalīsimies starptautiskā forumā par ilgtspējīgām tehnoloģijām un to nozīmi nākotnē.</p>
-                <a href="#" class="read-more">Lasīt vairāk →</a>
+                <a href="#" class="read-more" onclick="showAlert('Vides tehnoloģiju forums')">Lasīt vairāk →</a>
             </div>
         </div>
     </div>
@@ -351,8 +454,8 @@
             <div>Izmēģini mūsu jauno pakalpojumu un saņem 20% atlaidi pirmajam mēnesim.</div>
         </div>
         <div>
-            <a href="#" class="btn btn-primary">Iegādāties</a>
-            <a href="#" class="btn btn-outline">Izmēģināt bez maksas</a>
+            <a href="#" class="btn btn-primary" onclick="showAlert('Iegādāties')">Iegādāties</a>
+            <a href="#" class="btn btn-outline" onclick="showAlert('Izmēģināt bez maksas')">Izmēģināt bez maksas</a>
         </div>
     </div>
 
@@ -373,12 +476,16 @@
                 <tr><th>Plāns</th><th>Cena (mēnesī)</th><th>Ietvertie pakalpojumi</th></tr>
             </thead>
             <tbody>
-                <tr><td>Pamata</td><td>€49</td><td>Mājaslapa, 5 lapas, e-pasta atbalsts</td></tr>
-                <tr><td>Bizness</td><td>€99</td><td>Mājaslapa, 15 lapas, SEO optimizācija, prioritārais atbalsts</td></tr>
-                <tr><td>Premium</td><td>€199</td><td>Visas iespējas + pielāgots dizains, e-veikals, 24/7 atbalsts</td></tr>
+                <tr> proiektuakPamata</td><td>€49</td><td>Mājaslapa, 5 lapas, e-pasta atbalsts</td></tr>
+                <tr> proiektuakBizness</td><td>€99</td><td>Mājaslapa, 15 lapas, SEO optimizācija, prioritārais atbalsts</td></tr>
+                <tr> proiektuakPremium</td><td>€199</td><td>Visas iespējas + pielāgots dizains, e-veikals, 24/7 atbalsts</td></tr>
             </tbody>
         </table>
         <p>* Visi plāni ietver servera hosting un domēna vārda reģistrāciju pirmajam gadam.</p>
+        
+        <!-- Interaktīva poga cenām -->
+        <button class="btn btn-primary" onclick="showPrices()">📊 Parādīt cenu kopsavilkumu</button>
+        <div id="priceSummary" style="margin-top: 10px; padding: 10px; background: #f0f2f5; border-radius: 8px; display: none;"></div>
     </div>
 </main>
 
@@ -410,6 +517,119 @@
         </div>
     </div>
 </footer>
+
+<script>
+    // ========== 1. setDate() - parāda šodienas datumu ==========
+    function showDate() {
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        const formattedDate = today.toLocaleDateString('lv-LV', options);
+        document.getElementById('dateOutput').innerHTML = formattedDate;
+    }
+    showDate();
+
+    // ========== 2. Sveiciens pēc stundas (stunda < 18 utt.) ==========
+    function showGreeting() {
+        const now = new Date();
+        const stunda = now.getHours();
+        let greeting = "";
+        
+        if (stunda < 10) {
+            greeting = "🌅 Labrīt! Jauka diena priekšā!";
+        } else if (stunda < 18) {
+            greeting = "☀️ Labdien! Priecājamies Tevi redzēt!";
+        } else {
+            greeting = "🌙 Labvakar! Atpūties pēc darba dienas.";
+        }
+        
+        document.getElementById('greetingOutput').innerHTML = greeting;
+        document.getElementById('hourInfo').innerHTML = stunda + ":00";
+    }
+    showGreeting();
+
+    // ========== 3. Math.round() - noapaļošana ==========
+    function roundNumber() {
+        let input = document.getElementById('roundInput').value;
+        if (input === "") {
+            document.getElementById('roundOutput').innerHTML = "❌ Ievadi skaitli!";
+            return;
+        }
+        let number = parseFloat(input);
+        if (isNaN(number)) {
+            document.getElementById('roundOutput').innerHTML = "❌ Lūdzu, ievadi derīgu skaitli!";
+        } else {
+            let rounded = Math.round(number);
+            document.getElementById('roundOutput').innerHTML = `${number} → noapaļots: ${rounded}`;
+        }
+    }
+
+    // ========== 4. Vienkāršs kalkulators ==========
+    function calculate(operation) {
+        let num1 = parseFloat(document.getElementById('num1').value);
+        let num2 = parseFloat(document.getElementById('num2').value);
+        let result;
+        
+        if (isNaN(num1) || isNaN(num2)) {
+            document.getElementById('calcOutput').innerHTML = "❌ Ievadi abus skaitļus!";
+            return;
+        }
+        
+        switch(operation) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                if (num2 === 0) {
+                    document.getElementById('calcOutput').innerHTML = "❌ Dalīšana ar nulli nav iespējama!";
+                    return;
+                }
+                result = num1 / num2;
+                break;
+            default:
+                return;
+        }
+        
+        document.getElementById('calcOutput').innerHTML = `${num1} ${operation} ${num2} = ${result}`;
+    }
+
+    // ========== 5. Papildus: alert() poga ==========
+    function showAlert(message) {
+        alert("📢 Jūs nospiedāt: " + message);
+    }
+
+    // ========== 6. Cenu kopsavilkums ==========
+    function showPrices() {
+        const prices = [
+            { name: "Pamata", price: 49 },
+            { name: "Bizness", price: 99 },
+            { name: "Premium", price: 199 }
+        ];
+        
+        let summary = "<strong>📋 Cenu kopsavilkums:</strong><br>";
+        let total = 0;
+        
+        for (let i = 0; i < prices.length; i++) {
+            summary += `• ${prices[i].name} plāns: €${prices[i].price} mēnesī<br>`;
+            total += prices[i].price;
+        }
+        summary += `<br><strong>Vidējā cena: €${Math.round(total / prices.length)}</strong>`;
+        
+        const summaryDiv = document.getElementById('priceSummary');
+        summaryDiv.innerHTML = summary;
+        summaryDiv.style.display = "block";
+    }
+
+    // ========== 7. Papildus: konsolē parāda fruits masīvu ==========
+    var fruits = ["Banana", "Orange", "Apple", "Mango"];
+    console.log("Augļu masīvs (fruits):", fruits);
+    console.log("Pirmais auglis:", fruits[0]);
+</script>
 
 </body>
 </html>
