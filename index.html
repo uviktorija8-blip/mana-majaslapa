@@ -1,225 +1,59 @@
-<!DOCTYPE html>
-<html lang="lv">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kopienas portāls | JavaScript projekts</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #333; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        /* Header */
-        .site-header { background: white; padding: 1rem 0; border-bottom: 3px solid #28a745; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        .logo { font-size: 1.6rem; font-weight: bold; color: #28a745; }
-        .logo span { color: #333; }
-        .nav-links a { text-decoration: none; color: #555; margin-left: 1.5rem; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover { color: #28a745; }
-        
-        /* Hero */
-        .hero { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); color: white; border-radius: 15px; margin: 2rem 0; padding: 2.5rem; text-align: center; }
-        .hero h1 { font-size: 2rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.1rem; opacity: 0.95; }
-        
-        /* JS paneļi */
-        .js-section { margin: 2rem 0; }
-        .js-title { font-size: 1.6rem; color: #28a745; margin-bottom: 1.5rem; border-left: 5px solid #28a745; padding-left: 1rem; }
-        .js-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .js-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08); transition: transform 0.2s; text-align: center; }
-        .js-card:hover { transform: translateY(-3px); }
-        .js-card h3 { color: #28a745; margin-bottom: 1rem; }
-        .output { font-size: 1.2rem; font-weight: bold; background: #e8f5e9; padding: 12px; border-radius: 8px; margin: 12px 0; color: #1e7e34; }
-        .greeting-output { font-size: 1.3rem; }
-        input, button { padding: 10px 15px; margin: 5px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        button { background: #28a745; color: white; border: none; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #1e7e34; transform: scale(1.02); }
-        
-        /* Ziņas */
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
-        .news-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-        .news-card h3 { color: #333; margin-bottom: 0.5rem; }
-        .news-card p { color: #666; margin: 0.8rem 0; }
-        .btn { display: inline-block; padding: 8px 20px; background: #28a745; color: white; border-radius: 20px; text-decoration: none; font-size: 0.9rem; border: none; cursor: pointer; }
-        .btn-outline { background: transparent; border: 2px solid #28a745; color: #28a745; }
-        .btn-outline:hover { background: #28a745; color: white; }
-        
-        /* Tabula */
-        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #28a745; color: white; }
-        
-        /* Footer */
-        .site-footer { background: #1a3c2c; color: white; margin-top: 3rem; padding: 2rem 0; }
-        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; }
-        .footer-col a { color: #ccc; text-decoration: none; display: block; margin: 0.5rem 0; }
-        
-        @media (max-width: 768px) {
-            .header-flex { flex-direction: column; text-align: center; }
-            .nav-links a { margin: 0 0.8rem; }
-            .hero h1 { font-size: 1.5rem; }
-        }
-    </style>
-</head>
-<body>
+/*
+  Gaismas AUTO–OFP
+  Autors: [Tavs vārds]
+  Datums: 2026
+  Funkcija: Ja PIR sensors nokustību – ieslēdz gaismu (LED);
+            pēc 10 sek (maināms) izslēdz, ja nav kustības.
+*/
 
-<header class="site-header">
-    <div class="container header-flex">
-        <div class="logo">🌿 <span>Kopienas</span> Portāls</div>
-        <div class="nav-links">
-            <a href="#">Sākums</a>
-            <a href="#">Par projektu</a>
-            <a href="#">Pakalpojumi</a>
-            <a href="#">Kontakti</a>
-        </div>
-    </div>
-</header>
+const int PIR_PIN = 2;      // PIR sensors
+const int RELAY_PIN = 3;    // Relejs (vai LED)
+const int MANUAL_PIN = 4;   // Manuālā poga (HIGH = ieslēgt)
+const long DELAY_MS = 10000; // 10 sekundes (reālam iestatīt 300000 = 5min)
 
-<main class="container">
-    <!-- Hero bloks -->
-    <div class="hero">
-        <h1>🏡 Kopienas digitālais centrs</h1>
-        <p>Viena vieta visām ikdienas vajadzībām – datumi, rīki, informācija un palīdzība.</p>
-    </div>
+bool gaismaIeslegta = false;
+unsigned long pedejasKustibasLaiks = 0;
 
-    <!-- JavaScript funkcionalitāte -->
-    <div class="js-section">
-        <h2 class="js-title">⚡ Interaktīvie rīki</h2>
-        <div class="js-grid">
-            <!-- 1. Datums -->
-            <div class="js-card">
-                <h3>📅 Šodienas datums</h3>
-                <div class="output" id="dateOutput">...</div>
-                <p><small>setDate() - automātiska datuma atjaunošana</small></p>
-            </div>
+void setup() {
+  pinMode(PIR_PIN, INPUT);
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(MANUAL_PIN, INPUT_PULLUP);
+  digitalWrite(RELAY_PIN, LOW); // sākumā gaisma izslēgta
+  Serial.begin(9600);
+}
 
-            <!-- 2. Sveiciens -->
-            <div class="js-card">
-                <h3>👋 Personalizēts sveiciens</h3>
-                <div class="output greeting-output" id="greetingOutput">...</div>
-                <p><small>Pamatojoties uz pulksteni: <span id="hourInfo"></span></small></p>
-            </div>
+void loop() {
+  bool kustiba = digitalRead(PIR_PIN) == HIGH;
+  bool manualaIzsl = digitalRead(MANUAL_PIN) == LOW; // poga nospiesta
 
-            <!-- 3. Noapaļošana -->
-            <div class="js-card">
-                <h3>🔢 Noapaļo skaitli</h3>
-                <input type="number" id="roundInput" step="any" placeholder="Ievadi skaitli">
-                <button onclick="roundNumber()">Math.round()</button>
-                <div class="output" id="roundOutput">-</div>
-            </div>
-
-            <!-- 4. Kalkulators -->
-            <div class="js-card">
-                <h3>🧮 Ātrais kalkulators</h3>
-                <input type="number" id="num1" placeholder="Skaitlis 1" style="width:80px">
-                <input type="number" id="num2" placeholder="Skaitlis 2" style="width:80px"><br>
-                <button onclick="calc('+')">+</button>
-                <button onclick="calc('-')">-</button>
-                <button onclick="calc('*')">×</button>
-                <button onclick="calc('/')">÷</button>
-                <div class="output" id="calcOutput">-</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ziņu sadaļa -->
-    <h2 class="js-title" style="margin-top: 0.5rem;">📰 Aktuāli kopienā</h2>
-    <div class="news-grid">
-        <div class="news-card"><h3>🌱 Pavasara talkas</h3><p>Pievienojies apkārtnes sakopšanai 15. maijā!</p><button class="btn" onclick="showMessage('Pavasara talkas')">Lasīt vairāk</button></div>
-        <div class="news-card"><h3>💻 Digitālās darbnīcas</h3><p>Bezmaksas kursi senioriem katru ceturtdienu.</p><button class="btn" onclick="showMessage('Digitālās darbnīcas')">Lasīt vairāk</button></div>
-        <div class="news-card"><h3>🏆 Vietējais atbalsts</h3><p>Jaunā atbalsta programma mazajiem uzņēmējiem.</p><button class="btn" onclick="showMessage('Vietējais atbalsts')">Lasīt vairāk</button></div>
-    </div>
-
-    <!-- Pakalpojumu tabula -->
-    <div class="js-card" style="margin: 2rem 0;">
-        <h3>📊 Mūsu pakalpojumu cenas</h3>
-        <table>
-            <thead><tr><th>Pakalpojums</th><th>Cena</th><th>Apraksts</th></tr></thead>
-            <tbody>
-                <tr><td>Mājaslapas izstrāde</td><td>€199</td><td>Modernas, responsīvas vietnes</td></tr>
-                <tr><td>Digitālais mārketings</td><td>€99/mēn</td><td>SEO, sociālie tīkli</td></tr>
-                <tr><td>IT konsultācijas</td><td>€49/h</td><td>Pieredzējušu speciālistu atbalsts</td></tr>
-            </tbody>
-        </table>
-        <button class="btn" onclick="showTotal()">💰 Aprēķināt vidējo cenu</button>
-        <div id="totalOutput" class="output" style="margin-top: 10px; display: none;"></div>
-    </div>
-</main>
-
-<footer class="site-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-col"><h4>🌿 Kopienas Portāls</h4><p>Risinājums vietējai kopienai – vienkārši, ātri, efektīvi.</p></div>
-            <div class="footer-col"><h4>Kontakti</h4><p>📧 info@kopienas-portals.lv</p><p>📞 +371 29123456</p></div>
-            <div class="footer-col"><h4>Izvēlne</h4><a href="#">Sākums</a><a href="#">Par mums</a><a href="#">Kontakti</a></div>
-        </div>
-        <div class="footer-bottom" style="text-align:center; margin-top:1.5rem; padding-top:1rem; border-top:1px solid #2a5a3a;"><p>© 2025 Kopienas Portāls | Izstrādāts lokālās problēmas risināšanai</p></div>
-    </div>
-</footer>
-
-<script>
-    // === 1. DATUMS ===
-    function showDate() {
-        const today = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-        document.getElementById('dateOutput').innerHTML = today.toLocaleDateString('lv-LV', options);
+  // 1. Manuālā pārrakstīšana
+  if (manualaIzsl) {
+    if (!gaismaIeslegta) {
+      digitalWrite(RELAY_PIN, HIGH);
+      gaismaIeslegta = true;
+      Serial.println("Manuāli ieslēgts");
     }
-    showDate();
+    pedejasKustibasLaiks = millis(); // atiestata taimeri
+    delay(200); // atbrīvo no pogas dubultspiediena
+    return;
+  }
 
-    // === 2. SVEICIENS PĒC STUNDAS ===
-    function showGreeting() {
-        const stunda = new Date().getHours();
-        let greeting = "";
-        if (stunda < 10) greeting = "🌅 Labrīt! Skaistu dienu!";
-        else if (stunda < 18) greeting = "☀️ Labdien! Priecājamies Tevi redzēt!";
-        else greeting = "🌙 Labvakar! Novēlam mierīgu vakaru!";
-        document.getElementById('greetingOutput').innerHTML = greeting;
-        document.getElementById('hourInfo').innerHTML = stunda + ":00";
+  // 2. Automātiskais režīms
+  if (kustiba) {
+    pedejasKustibasLaiks = millis();
+    if (!gaismaIeslegta) {
+      digitalWrite(RELAY_PIN, HIGH);
+      gaismaIeslegta = true;
+      Serial.println("Kustība – gaisma IESLĒGTA");
     }
-    showGreeting();
+  }
 
-    // === 3. NOAPAĻOŠANA ===
-    function roundNumber() {
-        let val = parseFloat(document.getElementById('roundInput').value);
-        if (isNaN(val)) document.getElementById('roundOutput').innerHTML = "❌ Ievadi skaitli!";
-        else document.getElementById('roundOutput').innerHTML = `${val} → ${Math.round(val)}`;
-    }
+  // 3. Pārbaudīt, vai laiks izslēgt
+  if (gaismaIeslegta && (millis() - pedejasKustibasLaiks >= DELAY_MS)) {
+    digitalWrite(RELAY_PIN, LOW);
+    gaismaIeslegta = false;
+    Serial.println("Bez kustības – gaisma IZSLĒGTA");
+  }
 
-    // === 4. KALKULATORS ===
-    function calc(op) {
-        let a = parseFloat(document.getElementById('num1').value);
-        let b = parseFloat(document.getElementById('num2').value);
-        if (isNaN(a) || isNaN(b)) { document.getElementById('calcOutput').innerHTML = "❌ Ievadi abus skaitļus!"; return; }
-        let res;
-        if (op === '+') res = a + b;
-        else if (op === '-') res = a - b;
-        else if (op === '*') res = a * b;
-        else if (op === '/') { if (b === 0) { document.getElementById('calcOutput').innerHTML = "❌ Dalīt ar nulli nedrīkst!"; return; } res = a / b; }
-        document.getElementById('calcOutput').innerHTML = `${a} ${op} ${b} = ${res}`;
-    }
-
-    // === 5. ALERT FUNKCIJA ===
-    function showMessage(topic) {
-        alert(`📢 Informācija par: ${topic}\n\nVairāk informācijas drīzumā!`);
-    }
-
-    // === 6. CENU APRĒĶINS ===
-    function showTotal() {
-        const prices = [199, 99, 49];
-        let sum = 0;
-        for (let i = 0; i < prices.length; i++) { sum += prices[i]; }
-        let avg = Math.round(sum / prices.length);
-        const div = document.getElementById('totalOutput');
-        div.innerHTML = `💰 Vidējā pakalpojuma cena: €${avg} (visi pakalpojumi kopā: €${sum})`;
-        div.style.display = "block";
-    }
-
-    // Konsoles izvade (izpētes dati)
-    console.log("=== PROJEKTS: Kopienas Portāls ===");
-    console.log("Problēma: informācijas trūkums kopienā");
-    console.log("Risinājums: interaktīva mājaslapa ar JS rīkiem");
-    var fruits = ["Ābols", "Bumbieris", "Apelsīns", "Banāns"];
-    console.log("Augļu piemērs masīvam:", fruits);
-</script>
-</body>
-</html>
+  delay(100); // maza pauze stabilitātei
+}
