@@ -1,111 +1,192 @@
-/*
-  Gaismas AUTO–OFP - DARBOJOŠA VERSIJA
-  Autors: [Tavs vārds]
-  Datums: 2026
-  
-  Savienojumi:
-  - PIR sensors: VCC -> 5V, GND -> GND, OUT -> D2
-  - Relejs (vai LED): IN -> D3, VCC -> 5V, GND -> GND
-  - Poga: viens gals -> GND, otrs gals -> D4
-*/
-
-const int PIR_PIN = 2;        // PIR sensors
-const int RELAY_PIN = 3;      // Relejs/vadītā izeja
-const int MANUAL_PIN = 4;     // Manuālā poga (nospiežot savieno ar GND)
-
-const unsigned long DELAY_MS = 10000;  // 10 sekundes (reālam 300000 = 5 min)
-// DEMO režīmā 10 sek, reālai lietošanai nomainīt uz 300000
-
-unsigned long lastMotionTime = 0;
-bool lightOn = false;
-bool manualOverride = false;
-unsigned long manualStartTime = 0;
-const unsigned long MANUAL_DURATION = 10000; // Manuālais režīms arī uz 10 sek
-
-// Debounce pogai
-unsigned long lastButtonPress = 0;
-const unsigned long DEBOUNCE_DELAY = 200;
-
-void setup() {
-  Serial.begin(9600);
-  
-  pinMode(PIR_PIN, INPUT);
-  pinMode(RELAY_PIN, OUTPUT);
-  pinMode(MANUAL_PIN, INPUT_PULLUP);  // Iekšējais pull-up rezistors
-  
-  digitalWrite(RELAY_PIN, LOW);  // Sākumā gaisma izslēgta
-  
-  Serial.println("Sistēma startē...");
-  Serial.println("PIR sensors siltināsies ~30 sekundes");
-  delay(1000);  // Neliela pauze stabilizācijai
-}
-
-void loop() {
-  // 1. Nolasīt sensora vērtības
-  int motion = digitalRead(PIR_PIN);
-  int buttonState = digitalRead(MANUAL_PIN);
-  
-  static int lastMotionState = LOW;
-  static unsigned long lastMotionChange = 0;
-  const unsigned long MOTION_DEBOUNCE = 100; // PIR sensoram debounce
-  
-  // 2. Manuālās pogas apstrāde ar debounce
-  if (buttonState == LOW) {  // Poga nospiesta (savienota ar GND)
-    if (millis() - lastButtonPress > DEBOUNCE_DELAY) {
-      lastButtonPress = millis();
-      
-      // Manuāli ieslēgt uz MANUAL_DURATION laiku
-      manualOverride = true;
-      manualStartTime = millis();
-      if (!lightOn) {
-        digitalWrite(RELAY_PIN, HIGH);
-        lightOn = true;
-        Serial.println("🔘 MANUĀLI ieslēgts (uz 10 sek)");
-      }
-    }
-  }
-  
-  // 3. Manuālā režīma beigas
-  if (manualOverride && (millis() - manualStartTime >= MANUAL_DURATION)) {
-    manualOverride = false;
-    // Neizslēdzam uzreiz - pārbaudām, vai ir kustība
-    Serial.println("Manuālais režīms beidzies, pāreju uz automātisko");
-  }
-  
-  // 4. Automātiskais režīms (tikai ja nav manuālās pārrakstīšanas)
-  if (!manualOverride) {
-    // PIR sensora atspole ar debounce (lai nerastos viltus impulsi)
-    if (motion != lastMotionState) {
-      lastMotionChange = millis();
-    }
-    
-    if ((millis() - lastMotionChange) > MOTION_DEBOUNCE) {
-      if (motion == HIGH && lastMotionState == LOW) {
-        // Kustība atklāta
-        lastMotionTime = millis();
-        lastMotionState = HIGH;
-        
-        if (!lightOn) {
-          digitalWrite(RELAY_PIN, HIGH);
-          lightOn = true;
-          Serial.println("🟢 Kustība atklāta - gaisma IESLĒGTA");
-        } else {
-          Serial.println("Kustība atklāta - taimeris atiestatīts");
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <title>Gaismas AUTO-OFP</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial;
         }
-      } 
-      else if (motion == LOW && lastMotionState == HIGH) {
-        lastMotionState = LOW;
-        Serial.println("Kustība beigusies - taimeris iet");
-      }
+        .card {
+            background: #0f0f23;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            width: 350px;
+        }
+        .light {
+            font-size: 80px;
+            margin: 20px;
+            transition: 0.2s;
+        }
+        .light-off { filter: grayscale(1); opacity: 0.5; }
+        .light-on { text-shadow: 0 0 30px #ffcc00; }
+        .sensor-area {
+            background: #2a2a4a;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        .manual-btn {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .timer {
+            background: #333;
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .timer-fill {
+            background: #ffcc00;
+            width: 0%;
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.1s;
+        }
+        .log {
+            background: #000;
+            height: 100px;
+            overflow-y: auto;
+            font-size: 11px;
+            padding: 8px;
+            text-align: left;
+            font-family: monospace;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>💡 Gaismas AUTO-OFP</h2>
+    <div class="light light-off" id="light">💡</div>
+    <div id="lightText">GAISMA IZSLĒGTA</div>
+
+    <div class="sensor-area" id="motionZone">
+        🖱️ KUSTĪBAS ZONA<br>
+        <small>(bīdi peli šeit)</small>
+        <div id="motionBadge" style="margin-top:10px;">⚪ NAV KUSTĪBAS</div>
+    </div>
+
+    <button class="manual-btn" id="manualBtn">🔘 MANUĀLI IESLĒGT (10s)</button>
+
+    <div>⏱️ Taimeris: <span id="timerSec">0.0</span> s</div>
+    <div class="timer"><div class="timer-fill" id="timerFill"></div></div>
+
+    <div class="log" id="log"></div>
+    <div style="font-size:10px; margin-top:10px;">Autors: Individuāls projekts</div>
+</div>
+
+<script>
+    let lightOn = false, manual = false, lastMotion = Date.now();
+    let timer = null;
+    const DELAY = 10;
+
+    function log(msg) {
+        const logDiv = document.getElementById('log');
+        const entry = document.createElement('div');
+        entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        logDiv.appendChild(entry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+        while(logDiv.children.length > 20) logDiv.removeChild(logDiv.firstChild);
     }
+
+    function setLight(state) {
+        if(lightOn === state) return;
+        lightOn = state;
+        const lightDiv = document.getElementById('light');
+        const textDiv = document.getElementById('lightText');
+        if(state) {
+            lightDiv.className = 'light light-on';
+            textDiv.innerText = '💡 GAISMA IESLĒGTA';
+            log('Gaisma IESLĒGTA');
+        } else {
+            lightDiv.className = 'light light-off';
+            textDiv.innerText = '💡 GAISMA IZSLĒGTA';
+            log('Gaisma IZSLĒGTA');
+        }
+    }
+
+    function updateTimer() {
+        if(!lightOn && !manual) {
+            document.getElementById('timerSec').innerText = '0.0';
+            document.getElementById('timerFill').style.width = '0%';
+            return;
+        }
+        let elapsed = (Date.now() - lastMotion) / 1000;
+        let left = Math.max(0, DELAY - elapsed);
+        document.getElementById('timerSec').innerText = left.toFixed(1);
+        document.getElementById('timerFill').style.width = (left/DELAY)*100 + '%';
+        
+        if(left <= 0.01 && !manual && lightOn) {
+            setLight(false);
+            if(timer) clearInterval(timer);
+            timer = null;
+            log('Automātiska izslēgšana pēc 10s');
+        }
+    }
+
+    function startTimer() {
+        if(timer) clearInterval(timer);
+        timer = setInterval(updateTimer, 100);
+    }
+
+    function motion() {
+        if(manual) {
+            lastMotion = Date.now();
+            startTimer();
+            return;
+        }
+        if(!lightOn) setLight(true);
+        lastMotion = Date.now();
+        startTimer();
+        
+        // vizuāla atgriezeniskā saite
+        document.getElementById('motionBadge').innerHTML = '🟢 KUSTĪBA ATKLĀTA';
+        setTimeout(() => {
+            if(!manual) document.getElementById('motionBadge').innerHTML = '⚪ NAV KUSTĪBAS';
+        }, 300);
+        log('Kustība atklāta');
+    }
+
+    function manualOverride() {
+        manual = true;
+        setLight(true);
+        lastMotion = Date.now();
+        startTimer();
+        log('🔘 Manuāli ieslēgts');
+        setTimeout(() => {
+            manual = false;
+            document.getElementById('motionBadge').innerHTML = '⚪ NAV KUSTĪBAS';
+            log('Manuālais režīms beidzies');
+            let elapsed = (Date.now() - lastMotion)/1000;
+            if(elapsed >= DELAY && lightOn) setLight(false);
+            else if(lightOn) startTimer();
+        }, 10000);
+    }
+
+    // Notikumi
+    const zone = document.getElementById('motionZone');
+    zone.onmouseenter = motion;
+    zone.onmousemove = motion;
+    zone.onclick = motion;
+    document.getElementById('manualBtn').onclick = manualOverride;
     
-    // Pārbaudīt, vai laiks izslēgt gaismu
-    if (lightOn && (millis() - lastMotionTime >= DELAY_MS)) {
-      digitalWrite(RELAY_PIN, LOW);
-      lightOn = false;
-      Serial.println("🔴 Nav kustības - gaisma IZSLĒGTA");
-    }
-  }
-  
-  delay(50);  // Neliela pauze stabilitātei
-}
+    log('Sistēma startēta | Aizture: 10s');
+</script>
+</body>
+</html>
