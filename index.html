@@ -1,60 +1,111 @@
-cpp
 /*
-  Gaismas AUTO–OFP
+  Gaismas AUTO–OFP - DARBOJOŠA VERSIJA
   Autors: [Tavs vārds]
   Datums: 2026
-  Funkcija: Ja PIR sensors nokustību – ieslēdz gaismu (LED);
-            pēc 10 sek (maināms) izslēdz, ja nav kustības.
+  
+  Savienojumi:
+  - PIR sensors: VCC -> 5V, GND -> GND, OUT -> D2
+  - Relejs (vai LED): IN -> D3, VCC -> 5V, GND -> GND
+  - Poga: viens gals -> GND, otrs gals -> D4
 */
 
-const int PIR_PIN = 2;      // PIR sensors
-const int RELAY_PIN = 3;    // Relejs (vai LED)
-const int MANUAL_PIN = 4;   // Manuālā poga (HIGH = ieslēgt)
-const long DELAY_MS = 10000; // 10 sekundes (reālam iestatīt 300000 = 5min)
+const int PIR_PIN = 2;        // PIR sensors
+const int RELAY_PIN = 3;      // Relejs/vadītā izeja
+const int MANUAL_PIN = 4;     // Manuālā poga (nospiežot savieno ar GND)
 
-bool gaismaIeslegta = false;
-unsigned long pedejasKustibasLaiks = 0;
+const unsigned long DELAY_MS = 10000;  // 10 sekundes (reālam 300000 = 5 min)
+// DEMO režīmā 10 sek, reālai lietošanai nomainīt uz 300000
+
+unsigned long lastMotionTime = 0;
+bool lightOn = false;
+bool manualOverride = false;
+unsigned long manualStartTime = 0;
+const unsigned long MANUAL_DURATION = 10000; // Manuālais režīms arī uz 10 sek
+
+// Debounce pogai
+unsigned long lastButtonPress = 0;
+const unsigned long DEBOUNCE_DELAY = 200;
 
 void setup() {
+  Serial.begin(9600);
+  
   pinMode(PIR_PIN, INPUT);
   pinMode(RELAY_PIN, OUTPUT);
-  pinMode(MANUAL_PIN, INPUT_PULLUP);
-  digitalWrite(RELAY_PIN, LOW); // sākumā gaisma izslēgta
-  Serial.begin(9600);
+  pinMode(MANUAL_PIN, INPUT_PULLUP);  // Iekšējais pull-up rezistors
+  
+  digitalWrite(RELAY_PIN, LOW);  // Sākumā gaisma izslēgta
+  
+  Serial.println("Sistēma startē...");
+  Serial.println("PIR sensors siltināsies ~30 sekundes");
+  delay(1000);  // Neliela pauze stabilizācijai
 }
 
 void loop() {
-  bool kustiba = digitalRead(PIR_PIN) == HIGH;
-  bool manualaIzsl = digitalRead(MANUAL_PIN) == LOW; // poga nospiesta
-
-  // 1. Manuālā pārrakstīšana
-  if (manualaIzsl) {
-    if (!gaismaIeslegta) {
-      digitalWrite(RELAY_PIN, HIGH);
-      gaismaIeslegta = true;
-      Serial.println("Manuāli ieslēgts");
+  // 1. Nolasīt sensora vērtības
+  int motion = digitalRead(PIR_PIN);
+  int buttonState = digitalRead(MANUAL_PIN);
+  
+  static int lastMotionState = LOW;
+  static unsigned long lastMotionChange = 0;
+  const unsigned long MOTION_DEBOUNCE = 100; // PIR sensoram debounce
+  
+  // 2. Manuālās pogas apstrāde ar debounce
+  if (buttonState == LOW) {  // Poga nospiesta (savienota ar GND)
+    if (millis() - lastButtonPress > DEBOUNCE_DELAY) {
+      lastButtonPress = millis();
+      
+      // Manuāli ieslēgt uz MANUAL_DURATION laiku
+      manualOverride = true;
+      manualStartTime = millis();
+      if (!lightOn) {
+        digitalWrite(RELAY_PIN, HIGH);
+        lightOn = true;
+        Serial.println("🔘 MANUĀLI ieslēgts (uz 10 sek)");
+      }
     }
-    pedejasKustibasLaiks = millis(); // atiestata taimeri
-    delay(200); // atbrīvo no pogas dubultspiediena
-    return;
   }
-
-  // 2. Automātiskais režīms
-  if (kustiba) {
-    pedejasKustibasLaiks = millis();
-    if (!gaismaIeslegta) {
-      digitalWrite(RELAY_PIN, HIGH);
-      gaismaIeslegta = true;
-      Serial.println("Kustība – gaisma IESLĒGTA");
+  
+  // 3. Manuālā režīma beigas
+  if (manualOverride && (millis() - manualStartTime >= MANUAL_DURATION)) {
+    manualOverride = false;
+    // Neizslēdzam uzreiz - pārbaudām, vai ir kustība
+    Serial.println("Manuālais režīms beidzies, pāreju uz automātisko");
+  }
+  
+  // 4. Automātiskais režīms (tikai ja nav manuālās pārrakstīšanas)
+  if (!manualOverride) {
+    // PIR sensora atspole ar debounce (lai nerastos viltus impulsi)
+    if (motion != lastMotionState) {
+      lastMotionChange = millis();
+    }
+    
+    if ((millis() - lastMotionChange) > MOTION_DEBOUNCE) {
+      if (motion == HIGH && lastMotionState == LOW) {
+        // Kustība atklāta
+        lastMotionTime = millis();
+        lastMotionState = HIGH;
+        
+        if (!lightOn) {
+          digitalWrite(RELAY_PIN, HIGH);
+          lightOn = true;
+          Serial.println("🟢 Kustība atklāta - gaisma IESLĒGTA");
+        } else {
+          Serial.println("Kustība atklāta - taimeris atiestatīts");
+        }
+      } 
+      else if (motion == LOW && lastMotionState == HIGH) {
+        lastMotionState = LOW;
+        Serial.println("Kustība beigusies - taimeris iet");
+      }
+    }
+    
+    // Pārbaudīt, vai laiks izslēgt gaismu
+    if (lightOn && (millis() - lastMotionTime >= DELAY_MS)) {
+      digitalWrite(RELAY_PIN, LOW);
+      lightOn = false;
+      Serial.println("🔴 Nav kustības - gaisma IZSLĒGTA");
     }
   }
-
-  // 3. Pārbaudīt, vai laiks izslēgt
-  if (gaismaIeslegta && (millis() - pedejasKustibasLaiks >= DELAY_MS)) {
-    digitalWrite(RELAY_PIN, LOW);
-    gaismaIeslegta = false;
-    Serial.println("Bez kustības – gaisma IZSLĒGTA");
-  }
-
-  delay(100); // maza pauze stabilitātei
+  
+  delay(50);  // Neliela pauze stabilitātei
 }
